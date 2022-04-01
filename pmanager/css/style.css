@@ -1,0 +1,210 @@
+@import url('');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'verdana', sans-serif;
+}
+body {
+    background-color: #eee;
+}
+input,
+button,
+select {
+    border: none;
+    outline: none;
+    padding: 20px;
+}
+.names_select {
+    height: 200px;
+}
+select option:not(:last-child) {
+    margin-bottom: 10px;
+}
+input[type=checkbox] {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+button {
+    background-color: #4fc3f7;
+    cursor: pointer;
+}
+.first_screen,
+.second_screen {
+    margin: 100px auto;
+}
+.first_screen {
+    width: 900px;
+}
+.second_screen {
+    width: 1400px;
+}
+.project_details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 60px;
+}
+.project_details form {
+    display: flex;
+}
+.project_details input {
+    background-color: #fff;
+    margin-right: 30px;
+}
+.project_details input,
+.project_details button {
+    width: 25%;
+}
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+.container .tasks,
+.container .participants {
+    flex: 0.45;
+}
+.tasks_head,
+.participants_head {
+    display: flex;
+}
+.tasks_head .tasks_title,
+.participants_head .participants_title,
+.details_head {
+    padding: 20px;
+    flex: 1;
+    background-color: #81d4fa;
+}
+.tasks_head .tasks_command,
+.participants_head .participants_command {
+    padding: 20px;
+    cursor: pointer;
+    background-color: #4fc3f7;
+}
+.tasks_body,
+.participants_body {
+    background-color: #fff;
+    padding: 20px;
+    overflow-y: scroll;
+    height: 300px;
+}
+.tasks_body span,
+.participants_body span {
+    display: block;
+}
+.tasks_body span:not(:last-child),
+.participants_body span:not(:last-child),
+.chart_box_body a:not(:last-child),
+.details_body span:not(:last-child) {
+    margin-bottom: 15px;
+}
+.tasks_popup,
+.participants_popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.tasks_box,
+.participants_box {
+    width: 400px;
+}
+.tasks_box_head,
+.participants_box_head {
+    display: flex;
+}
+.tasks_box_head .box_title,
+.participants_box_head .box_title {
+    background-color: #81d4fa;
+    flex: 1;
+    padding: 20px;
+}
+.tasks_box_head .tasks_box_command,
+.participants_box_head .participants_box_command {
+    background-color: #4fc3f7;
+    padding: 20px;
+    cursor: pointer;
+}
+.tasks_box_body,
+.participants_box_body {
+    background-color: #fff;
+    padding: 20px;
+}
+.participants_box_body input,
+.participants_box_body button,
+.tasks_box_body input:not(input[type=checkbox]),
+.tasks_box_body button,
+.tasks_box_body select {
+    width: 100%;
+}
+.label {
+    display: block;
+    margin-bottom: 10px;
+}
+.tasks_box_body input:not(input[type=checkbox]),
+.participants_box_body input,
+.tasks_box_body select {
+    margin-bottom: 15px;
+    background-color: #e1f5fe;
+}
+.tasks_box_body .checkbox_container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.tasks_box_body .checkbox_container input {
+    margin-right: 10px;
+}
+.container .charts {
+    flex: 0.7;
+}
+.container .details {
+    flex: 0.27;
+}
+.details_body {
+    padding: 20px;
+    background-color: #fff;
+}
+.chart_box_head {
+    background-color: #81d4fa;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.chart_box_head .month {
+    padding: 0 20px;
+    width: 80px;
+    text-align: center;
+}
+.chart_box_head .month:not(:last-child) {
+    border-right: 1px solid #000;
+}
+.chart_box_body {
+    padding: 20px;
+    background-color: #fff;
+    position: relative;
+}
+.chart_box_body a {
+    display: block;
+    color: #000;
+}
+.chart_data {
+    background-color: #4fc3f7;
+    padding: 10px;
+    display: block;
+    text-align: center;
+}
+.details_body span {
+    display: block;
+}
+.open_chart,
+.open_second {
+    margin-top: 60px;
+}
