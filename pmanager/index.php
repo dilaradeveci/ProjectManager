@@ -12,7 +12,7 @@ try {
 }
 
 if (isset($_POST['saveprojectdetails'])) {
-    $projectname = $_POST['projectname'];
+	$projectname = $_POST['projectname'];
     $projectstartdate = $_POST['projectstartdate'];
     $projectenddate = $_POST['projectenddate'];
 }
@@ -27,17 +27,28 @@ if (isset($_POST['saveprojectdetails'])) {
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     </head>
+	
     <body>
-        <div class="first_screen">
+		<div class="contents">
+        <div class="first_screen content content1">
             <div class="project_details">
+			
                 <form action="" method="post">
-                    <input type="text" name="projectname" placeholder="Project Name" required>
-                    <input type="date" name="projectstartdate" placeholder="Start Date" required>
-                    <input type="date" name="projectenddate" placeholder="End Date" required>
+                    <input type="text" name="projectname" placeholder="Project Name" value="<?php if (isset($_POST['saveprojectdetails'])){ echo $_POST['projectname'];}?>" required>
+                    <input type="date" name="projectstartdate" placeholder="Start Date" value="<?php if (isset($_POST['saveprojectdetails'])){ echo $_POST['projectstartdate'];}?>" required>
+                    <input type="date" name="projectenddate" placeholder="End Date" value="<?php if (isset($_POST['saveprojectdetails'])){ echo $_POST['projectenddate'];}?>" required>
                     <button name="saveprojectdetails">Save Details</button>
                 </form>
             </div>
-            <div class="container">
+            <div class="container-1">
+			
+				<canvas id ="tasks_canvas"  class="drawing_canvas"></canvas>	
+				<form id="category_form" class="invisible_form" method="post"> 
+					<input type="text" id="taskid" name="taskid" required>
+					<input type="text" id="taskcategory" name="taskcategory" required>
+					<button id="save_category" name="save_category">Save Category</button>
+				</form>
+				
                 <div class="tasks">
                     <div class="tasks_head">
                         <div class="tasks_title">
@@ -46,20 +57,29 @@ if (isset($_POST['saveprojectdetails'])) {
                         <div class="tasks_command">
                             <i class="fa-solid fa-plus"></i>
                         </div>
+						<div class="tasks_command tasks_command2", id="task_minus">
+                            <i class="fa-solid fa-minus"></i>
+                        </div>
                     </div>
-                    <div class="tasks_body">
+                    <div id="tasks_list" class="tasks_body">
                         <?php
                         $query = $db->query("SELECT * FROM tasks", PDO::FETCH_ASSOC);
                         
                         if ($query->rowCount()) {
                             foreach ($query as $row) {
-                                echo '<span>' . $row['task'] . '</span>';
+                                echo '<span data-id=' . $row['id']. '>' . $row['task'] . '</span>';
                             }
                         }
                         ?>
                     </div>
-                    <button class="open_chart">Open Chart Screen</button>
+                    <button class="open_chart">Gantt Chart Screen</button>
                 </div>
+				<canvas id="participants_canvas" class="drawing_canvas"></canvas>
+				<form id="assign_form" class="invisible_form" method="post"> 
+					<input type="text" id="taskid2" name="taskid2" required>
+					<input type="text" id="participantid" name="participantid" required>
+					<button id="save_assignment" name="save_assignment">Save Assignment</button>
+				</form>			
                 <div class="participants">
                     <div class="participants_head">
                         <div class="participants_title">
@@ -68,23 +88,29 @@ if (isset($_POST['saveprojectdetails'])) {
                         <div class="participants_command">
                             <i class="fa-solid fa-plus"></i>
                         </div>
+						<div class="participants_command participants_command2", id="participant_minus">
+                            <i class="fa-solid fa-minus"></i>
+                        </div>
                     </div>
-                    <div class="participants_body">
+                    <div id="participants_list" class="participants_body">
                         <?php
                         $query = $db->query("SELECT * FROM participants", PDO::FETCH_ASSOC);
                         
                         if ($query->rowCount()) {
                             foreach ($query as $row) {
-                                echo '<span>' . $row['fullname'] . '</span>';
+                                echo '<span data-id=' . $row['id']. '>' . $row['fullname'] . '</span>';
                             }
                         }
                         ?>
+						
                     </div>
+				
                 </div>
+				
             </div>
         </div>
-        <div class="second_screen">
-            <div class="container">
+        <div class="second_screen content content2" id="content2">
+            <div class="container-2">
                 <div class="charts">
                     <div class="chart_box">
                         <div class="chart_box_head">
@@ -401,7 +427,7 @@ if (isset($_POST['saveprojectdetails'])) {
                             }
                             ?>
                         </div>
-                        <button class="open_second">Back To Tasks Screen</button>
+                        <button class="open_second">Tasks Screen</button>
                     </div>
                 </div>
                 <div class="details">
@@ -409,7 +435,7 @@ if (isset($_POST['saveprojectdetails'])) {
                     if (isset($_GET['id'])) {
                         $requestId = $_GET['id'];
                     
-                        $stmt = $db->prepare("SELECT task, participants, startdate, enddate, important FROM tasks WHERE id = ?");
+                        $stmt = $db->prepare("SELECT task, participants, startdate, enddate, category FROM tasks WHERE id = ?");
                         
                         $stmt->execute([$requestId]); 
                         $row = $stmt->fetch();
@@ -427,15 +453,16 @@ if (isset($_POST['saveprojectdetails'])) {
                                 End Date: <?php echo $row['enddate']; ?>
                             </span>
                             <span>
-                                Important: <?php echo $row['important']; ?>
+                                Category: <?php echo $row['category']; ?>
                             </span>
                         </div>
                         <?php
                     } else {
                         ?>
-                        <div class="details_head">
+						
+                        <div class="details_head" style="display:none;">
                         </div>
-                        <div class="details_body">
+                        <div class="details_body" style="display:none;">
                         </div>
                         <?php
                     }
@@ -443,11 +470,11 @@ if (isset($_POST['saveprojectdetails'])) {
                 </div>
             </div>
         </div>
-        <div class="tasks_popup">
+        <div class="tasks_popup content content_popup">
             <div class="tasks_box">
                 <div class="tasks_box_head">
                     <div class="box_title">
-                        Add Task Screen
+                        Add Task
                     </div>
                     <div class="tasks_box_command">
                         <i class="fa-solid fa-xmark"></i>
@@ -472,21 +499,41 @@ if (isset($_POST['saveprojectdetails'])) {
                             }
                             ?>
                         </select>
-                        <span class="label">Important Task</span>
-                        <select name="important">
-                            <option>Yes</option>
-                            <option selected>No</option>
+                        <span class="label">Task Category</span>
+                        <select name="category">
+                            <option>Important</option>
+							 <option>Urgent</option>
+							  <option>In Progress</option>
+                            <option selected>Normal</option>
                         </select>
                         <button name="addtask">Add Task</button>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="participants_popup">
+		<div class="tasks_popup2 content content_popup" id="tasks_popup2">
+            <div class="tasks_box">
+                <div class="tasks_box_head">
+                    <div class="box_title">
+                        Delete Task
+                    </div>
+                    <div class="tasks_box_command2">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                </div>
+                <div class="tasks_box_body">
+                    <form action="" method="post">
+                        <input type="text" placeholder="Task Name" name="taskname2" required>
+                        <button name="deletetask">Delete Task</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="participants_popup content_popup content">
             <div class="participants_box">
                 <div class="participants_box_head">
                     <div class="box_title">
-                        Add Participant Screen
+                        Add Participant
                     </div>
                     <div class="participants_box_command">
                         <i class="fa-solid fa-xmark"></i>
@@ -500,14 +547,36 @@ if (isset($_POST['saveprojectdetails'])) {
                 </div>
             </div>
         </div>
+		<div class="participants_popup2 content content_popup" id="participants_popup2">
+            <div class="participants_box">
+                <div class="participants_box_head">
+                    <div class="box_title">
+                        Delete Participant
+                    </div>
+                    <div class="participants_box_command2">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                </div>
+                <div class="participants_box_body">
+                    <form action="" method="post">
+                        <input type="text" placeholder="Full Name" name="fullname">
+                        <button name="deleteparticipant">Delete Participant</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+		</div>
+		<div id="load" class="center"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="js/index.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+        <script src="js/index.js"></script>	
+		
     </body>
 </html>
 
 
 <?php
-// Process for add participants
+// Process for adding participants
 if (isset($_POST['addparticipant'])) {
     $fullnameInject = $_POST['fullname'];
 
@@ -529,12 +598,39 @@ if (isset($_POST['addparticipant'])) {
     }
 }
 
+// Process for deleting participants
+if (isset($_POST['deleteparticipant'])) {
+    $fullnameInject = $_POST['fullname'];
+
+    $dataP = [
+        'fullname' => $fullnameInject
+    ];
+
+    try {
+		$sql = 'SELECT COUNT(1) FROM participants WHERE fullname = :fullname';
+        $stmt = $db->prepare($sql);
+		$stmt->execute($dataP);
+        $row = $stmt->fetch();
+		echo '<script>console.log('. $row[0] .');</script>';
+		if ($row[0] > 0	) {
+			$sql = 'DELETE FROM participants WHERE fullname = :fullname';
+			$stmt = $db->prepare($sql);
+			$stmt->execute($dataP);
+			header('Refresh:0');
+		} else {
+			echo '<script>alert("Participant does not exists, try again.")</script>';
+		}
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+}
+
 // Process for add tasks
 if (isset($_POST['addtask'])) {
     $tasknameInject = $_POST['taskname'];
     $startdateInject = $_POST['startdate'];
     $enddateInject = $_POST['enddate'];
-    $importantInject = $_POST['important'];
+    $categoryInject = $_POST['category'];
 
     $startdateInjectBefore = (int)substr($startdateInject, 5, 2);
     $enddateInjectBefore = (int)substr($enddateInject, 5, 2);
@@ -558,7 +654,7 @@ if (isset($_POST['addtask'])) {
             'participants' => $taskfullnamesInject,
             'startdate' => $startdateInject,
             'enddate' => $enddateInject,
-            'important' => $importantInject
+            'category' => $categoryInject
         ];
     
         try {
@@ -567,13 +663,13 @@ if (isset($_POST['addtask'])) {
                 participants,
                 startdate,
                 enddate,
-                important
+                category
             ) VALUES (
                 :task,
                 :participants,
                 :startdate,
                 :enddate,
-                :important
+                :category
             )';
             $stmt = $db->prepare($sql);
             $stmt->execute($dataT);
@@ -582,5 +678,77 @@ if (isset($_POST['addtask'])) {
             echo 'Error: ' . $e->getMessage();
         }
     }
+}
+
+// Process for deleting tasks
+if (isset($_POST['deletetask'])) {
+    $taskInject = $_POST['taskname2'];
+
+    $dataP = [
+        'taskname' => $taskInject
+    ];
+
+    try {
+		
+		$sql = 'SELECT COUNT(1) FROM tasks  WHERE task = :taskname';
+        $stmt = $db->prepare($sql);
+		$stmt->execute($dataP);
+        $row = $stmt->fetch();
+		if ($row[0] > 0	) {
+			$sql = 'DELETE FROM tasks WHERE task = :taskname';
+        $stmt = $db->prepare($sql);
+        $stmt->execute($dataP);
+        header('Refresh:0');
+		} else {
+			echo '<script>alert("Participant does not exists, try again.")</script>';
+		}
+    } catch (PDOException $e) {
+		echo 'Error: ' . $e->getMessage();
+	}	
+}
+
+//Process for changing tasks according to drawings
+if (isset($_POST['save_category'])) {
+	
+    $taskid = $_POST['taskid'];
+    $taskcategory = $_POST['taskcategory'];
+	
+	$dataT = [
+            'taskid' => $taskid,
+            'category' => $taskcategory
+        ];
+	
+	try {
+		$sql = 'UPDATE tasks SET category = :category WHERE id = :taskid ';
+		$stmt = $db->prepare($sql);
+		
+		$stmt->execute($dataT);
+		echo "<script>console.log('here');</script>";
+		
+	}  catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+}
+
+//Process for assigning tasks according to drawings
+if (isset($_POST['save_assignment'])) {
+	
+    $taskid2 = $_POST['taskid2'];
+    $participantid = $_POST['participantid'];
+	
+	$dataT = [
+            'taskid2' => $taskid2,
+            'participantid' => $participantid
+        ];
+	
+	try {
+		$sql = 'UPDATE tasks SET participants = (SELECT fullname FROM participants WHERE id = :participantid) WHERE id = :taskid2 ';
+		$stmt = $db->prepare($sql);
+		
+		$stmt->execute($dataT);
+		echo "<script>console.log('here2');</script>";		
+	}catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
 }
 ?>

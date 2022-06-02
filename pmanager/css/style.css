@@ -35,6 +35,8 @@ button {
 .first_screen,
 .second_screen {
     margin: 100px auto;
+	position: relative;
+	display: grid;
 }
 .first_screen {
     width: 900px;
@@ -58,12 +60,18 @@ button {
 .project_details button {
     width: 25%;
 }
-.container {
+.container-1 {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
-.container .tasks,
-.container .participants {
+
+.container-2 {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.container-1 .tasks,
+.container-1 .participants{
     flex: 0.45;
 }
 .tasks_head,
@@ -83,6 +91,7 @@ button {
     cursor: pointer;
     background-color: #4fc3f7;
 }
+
 .tasks_body,
 .participants_body {
     background-color: #fff;
@@ -101,7 +110,9 @@ button {
     margin-bottom: 15px;
 }
 .tasks_popup,
-.participants_popup {
+.tasks_popup2,
+.participants_popup, 
+.participants_popup2 {
     position: fixed;
     top: 0;
     left: 0;
@@ -127,11 +138,26 @@ button {
     padding: 20px;
 }
 .tasks_box_head .tasks_box_command,
-.participants_box_head .participants_box_command {
+.tasks_box_command2,
+.participants_box_head .participants_box_command,
+ .participants_box_command2 {
     background-color: #4fc3f7;
     padding: 20px;
     cursor: pointer;
 }
+
+#participant_minus {
+    padding: 20px;
+    cursor: pointer;
+    background-color: #4fc3f7;
+}
+
+#task_minus {
+    padding: 20px;
+    cursor: pointer;
+    background-color: #4fc3f7;
+}
+
 .tasks_box_body,
 .participants_box_body {
     background-color: #fff;
@@ -207,4 +233,57 @@ button {
 .open_chart,
 .open_second {
     margin-top: 60px;
+}
+
+.drawing_canvas {
+    width:  100px;
+    height:  300px;
+    box-shadow: 0px 0px 1px 0px #000000;
+}
+#participants_canvas {
+    width:  200px;
+}
+
+.invisible_form{
+	display: none;
+}
+
+.center {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	display: inline;
+}
+
+#load{
+    border: 12px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 12px solid #444444;
+	width: 70px;
+	height: 70px;
+	animation: spin 1s linear infinite;    
+	display: block;
+}		
+		
+.content{
+	display: none;
+}
+
+#content2{
+	display: none;
+}
+
+.content_popup{
+	display: none;
+}
+
+.content2{
+	display: none;
+}
+
+.content1{
+	display: none;
 }
