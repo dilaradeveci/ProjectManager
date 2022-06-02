@@ -1,0 +1,3 @@
+full_numpy_bitmap_star
+full_numpy_bitmap_triangle
+full_numpy_bitmap_zigzag
