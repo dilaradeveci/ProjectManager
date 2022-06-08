@@ -212,13 +212,108 @@ class SketchPad {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     };
 }
-	
-	
+/*	
+class Arrow {
+	constructor(from_task, to_task) {
+		this.from_task = from_task;
+		this.to_task = to_task;
+
+		this.calculate_path();
+		this.draw();
+	}
+
+	calculate_path() {
+		let start_x =
+			this.from_task.offsetLeft + this.from_task.offsetWidth / 2;
+
+		const condition = () =>
+			this.to_task.offsetLeft < start_x + 10 &&
+			start_x > this.from_task.offsetLeft + 10;
+
+		while (condition()) {
+			start_x -= 10;
+		}
+
+		const start_y =
+			50 +
+			22 +
+			(10 + 22) *
+				this.from_task.task._index +
+			10;
+
+		const end_x = this.to_task.offsetLeft - 10 / 2;
+		const end_y =
+			50 +
+			22 / 2 +
+			(10 + 22) *
+				this.to_task.task._index +
+			10;
+
+		const from_is_below_to =
+			this.from_task.task._index > this.to_task.task._index;
+		const curve = 5;
+		const clockwise = from_is_below_to ? 1 : 0;
+		const curve_y = from_is_below_to ? -curve : curve;
+		const offset = from_is_below_to
+			? end_y + 5
+			: end_y - 5;
+
+		this.path = `
+		M ${start_x} ${start_y}
+		V ${offset}
+		a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
+		L ${end_x} ${end_y}
+		m -5 -5
+		l 5 5
+		l -5 5`;
+
+		if (
+			this.to_task.offsetLeft <
+			this.from_task.offsetLeft + 10
+		) {
+			const down_1 = 10 / 2 - curve;
+			const down_2 =
+				this.to_task.offsetTop +
+				this.to_task.getHeight() / 2 -
+				curve_y;
+			const left = this.to_task.offsetLeft - 10;
+
+			this.path = `
+			M ${start_x} ${start_y}
+			v ${down_1}
+			a ${curve} ${curve} 0 0 1 -${curve} ${curve}
+			H ${left}
+			a ${curve} ${curve} 0 0 ${clockwise} -${curve} ${curve_y}
+			V ${down_2}
+			a ${curve} ${curve} 0 0 ${clockwise} ${curve} ${curve_y}
+			L ${end_x} ${end_y}
+			m -5 -5
+			l 5 5
+			l -5 5`;
+		}
+	}
+
+	draw() {
+		this.element = createSVG('path', {
+			d: this.path,
+			'data-from': this.from_task.task.id,
+			'data-to': this.to_task.task.id,
+		});
+	}
+
+	update() {
+		this.calculate_path();
+		this.element.setAttribute('d', this.path);
+	}
+}
+	*/
 $( async () => {
 	$('.participants_popup').hide();
 	$('.participants_popup2').hide();
+	$('.participants_popup3').hide();
 	$('.tasks_popup').hide();
 	$('.tasks_popup2').hide();
+	$('.tasks_popup3').hide();
 	$('.second_screen').hide();
 		
 	document.addEventListener('readystatechange', e => {
@@ -234,17 +329,21 @@ $( async () => {
 			document.getElementsByClassName("content_popup").forEach(e => e.style.display = "flex");
 			$('.participants_popup').hide();
 			$('.participants_popup2').hide();
+			$('.participants_popup3').hide();
 			$('.tasks_popup').hide();
 			$('.tasks_popup2').hide();
+			$('.tasks_popup3').hide();
 			$('.second_screen').hide();
+			
 		}
 	});
 
 	
-	
-
 	var addParticipantButton = document.querySelector('.participants_command');
 	var closeParticipantsPopup = document.querySelector('.participants_box_command');
+	
+	var alterParticipantButton = document.querySelector('.participants_command3');
+	var closeParticipantsPopup3 = document.querySelector('.participants_box_command3');
 	
 	var deleteParticipantButton = document.querySelector('.participants_command2');
 	var closeParticipantsPopup2 = document.querySelector('.participants_box_command2');
@@ -252,10 +351,15 @@ $( async () => {
 	var addTaskButton = document.querySelector('.tasks_command');
 	var closeTasksPopup = document.querySelector('.tasks_box_command');
 	
+	var alterTaskButton = document.querySelector('.tasks_command3');
+	var closeTasksPopup3 = document.querySelector('.tasks_box_command3');
+	
 	var deleteTaskButton = document.querySelector('.tasks_command2');
 	var closeTasksPopup2 = document.querySelector('.tasks_box_command2');
 	
+	
 	var taskFullNames = document.querySelector('.tasks_box_body select option');
+	
 	var formAddTaskButton = document.querySelector('.tasks_box_body button');
 	var openChartButton = document.querySelector('.open_chart');
 	var openSecondScreenButton = document.querySelector('.open_second');
@@ -266,6 +370,12 @@ $( async () => {
 	});
 	closeParticipantsPopup.addEventListener('click', () => {
 		$('.participants_popup').fadeOut('fast');
+	});
+	alterParticipantButton.addEventListener('click', () => {
+		$('.participants_popup3').fadeIn('fast');
+	});
+	closeParticipantsPopup3.addEventListener('click', () => {
+		$('.participants_popup3').fadeOut('fast');
 	});
 	deleteParticipantButton.addEventListener('click', () => {
 		$('.participants_popup2').fadeIn('fast');
@@ -279,6 +389,12 @@ $( async () => {
 	});
 	closeTasksPopup.addEventListener('click', () => {
 		$('.tasks_popup').fadeOut('fast');
+	});
+	alterTaskButton.addEventListener('click', () => {
+		$('.tasks_popup3').fadeIn('fast');
+	});
+	closeTasksPopup3.addEventListener('click', () => {
+		$('.tasks_popup3').fadeOut('fast');
 	});
 	deleteTaskButton.addEventListener('click', () => {
 		$('.tasks_popup2').fadeIn('fast');
@@ -331,7 +447,10 @@ $( async () => {
         const minIndex = positions.indexOf(minPos);
         return $(list.find("span")[minIndex]);
     }
-
+	
+	
+	
+	
     const taskCanvas = new SketchPad($("#tasks_canvas"));
     taskCanvas.onshape = (data) => {
         const task = getListItemAtPosition($("#tasks_list"), "span", data.top + data.height / 2);
@@ -356,14 +475,13 @@ $( async () => {
 			category = "Important";
 			break;
 		  case "triangle":
-			category = "In progress";
+			category = "In Progress";			
 			break;
 		  case "zigzag":
 			category = "Urgent";
 			break;
 		}
 		
-	
 		$("#taskid").val(data.taskId);
 		$("#taskcategory").val(category);
 		$("#save_category").click();
@@ -376,7 +494,6 @@ $( async () => {
 		
 		let direction = participantCanvas.determineDirection(data.shape);
 		
-		//TODO: Understand if there is something drawn on the canvas
 		let context = direction.backward.getContext('2d');
 		const backwardPixels = context.getImageData(0, 0, direction.backward.width, direction.backward.height).data;
 		
@@ -427,4 +544,15 @@ $( async () => {
 		$("#save_assignment").click();
 		
     };
+	/*
+	let arrows = [];
+	let chart_data = document.getElementsByClassName("chart_data");
+	for(let i=0; i < chart_data.length; i++) {
+			var id = document.querySelector('a').href;
+			const arrow = new Arrow(
+				chart_data[i].id,chart_data[i].name
+			);
+			arrows = arrows.concat(arrows);
+	}
+		*/        
 });

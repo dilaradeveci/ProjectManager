@@ -86,7 +86,8 @@ button {
     background-color: #81d4fa;
 }
 .tasks_head .tasks_command,
-.participants_head .participants_command {
+.participants_head .participants_command,
+.details_head  {
     padding: 20px;
     cursor: pointer;
     background-color: #4fc3f7;
@@ -109,10 +110,12 @@ button {
 .details_body span:not(:last-child) {
     margin-bottom: 15px;
 }
-.tasks_popup,
+
 .tasks_popup2,
 .participants_popup, 
-.participants_popup2 {
+.participants_popup2,
+.participants_popup3,
+.progress_popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -123,6 +126,21 @@ button {
     justify-content: center;
     align-items: center;
 }
+
+.tasks_popup,
+.tasks_popup3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
 .tasks_box,
 .participants_box {
     width: 400px;
@@ -138,9 +156,10 @@ button {
     padding: 20px;
 }
 .tasks_box_head .tasks_box_command,
-.tasks_box_command2,
+.tasks_box_command2, .tasks_box_command3,
 .participants_box_head .participants_box_command,
- .participants_box_command2 {
+ .participants_box_command2, .participants_box_command3,
+.progress_box_command {
     background-color: #4fc3f7;
     padding: 20px;
     cursor: pointer;
@@ -153,6 +172,18 @@ button {
 }
 
 #task_minus {
+    padding: 20px;
+    cursor: pointer;
+    background-color: #4fc3f7;
+}
+
+#task_gear {
+    padding: 20px;
+    cursor: pointer;
+    background-color: #4fc3f7;
+}
+
+#participant_gear {
     padding: 20px;
     cursor: pointer;
     background-color: #4fc3f7;
@@ -188,16 +219,19 @@ button {
 .tasks_box_body .checkbox_container input {
     margin-right: 10px;
 }
-.container .charts {
-    flex: 0.7;
+.container-1 .container-2 .charts {
+    display: grid;
 }
-.container .details {
+
+.container-1 .container-2 .details {
     flex: 0.27;
 }
-.details_body {
-    padding: 20px;
-    background-color: #fff;
+
+.details_body {	
+    padding: 20px;	
+    background-color: #fff;	
 }
+
 .chart_box_head {
     background-color: #81d4fa;
     display: flex;
@@ -264,7 +298,10 @@ button {
 	border-top: 12px solid #444444;
 	width: 70px;
 	height: 70px;
-	animation: spin 1s linear infinite;    
+	animation-name: spin;
+	animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;    
 	display: block;
 }		
 		
@@ -282,6 +319,7 @@ button {
 
 .content2{
 	display: none;
+	
 }
 
 .content1{
